@@ -59,130 +59,40 @@ async function login() {
     input.password.value = '';
   }
 }
+
+function goBack() {
+  router.back();
+}
 </script>
 
 <template>
-  <div class="container-login">
-    <div class="login-container">
-      <h1 class="poppins-semibold">Connexion à CompanySaver</h1>
-      <form @submit.prevent="login">
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" v-model="input.email.value" :placeholder="input.email.placeholder" required />
+  <div class="flex flex-grow items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h3 class="cursor-pointer mb-6 text-sm" @click="goBack">
+        <i class="pi pi-arrow-left" style="font-size: 0.7rem"></i>
+        <span> Revenir en arrière</span>
+      </h3>
+      <h1 class="text-2xl font-semibold mb-6 text-center">Connexion à CompanySaver</h1>
+      <p class="text-center mb-6 text-gray-600">
+        <span class="text-600 line-height-3">Pas encore de compte ?</span>
+        <RouterLink to="/signup" class="font-medium no-underline ml-2 text-blue-500">Inscrivez vous !</RouterLink>
+      </p>
+      
+      <form>
+        <div class="mb-4">
+          <label for="email" class="block text-gray-700 mb-2">Email</label>
+          <InputText id="email" v-model="input.email.value" :placeholder="input.email.placeholder" class="w-full p-inputtext-sm" required />
         </div>
 
-        <div class="input-group">
-          <label for="password">Mot de passe</label>
-          <input type="password" id="password" v-model="input.password.value" :placeholder="input.password.placeholder" required />
+        <div class="mb-8">
+          <label for="password" class="block text-gray-700 mb-2">Mot de passe</label>
+          <InputText id="password" type="password" v-model="input.password.value" :placeholder="input.password.placeholder" class="w-full p-inputtext-sm" required />
         </div>
 
-        <button type="submit" class="btn btn-primary poppins-semibold">
-          Connexion
-        </button>
-        <RouterLink to="/signup" class="btn btn-secondary poppins-semibold">Pas encore inscrit ? Inscription</RouterLink>
-
-        <RouterLink to="/forgot-password" class="forgot-password-link">Mot de passe oublié ?</RouterLink>
+        <Button label="Connexion" icon="pi pi-user" class="w-full mb-4" @click="login"></Button>
+        
+        <!--<RouterLink to="/forgot-password" class="block text-center font-medium no-underline ml-2 text-blue-500">Mot de passe oublié ?</RouterLink>-->
       </form>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.container-login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .login-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 300px;
-    width: 500px;
-    min-height: 300px;
-    height: 500px;
-    margin: auto;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .input-group {
-    margin-bottom: 15px;
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-  }
-
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin: 30px 0;
-    border-radius: 4px;
-    text-align: center;
-    cursor: pointer;
-    font-size: 16px;
-    box-sizing: border-box;
-
-    &.disabled {
-      opacity: 0.5;
-    }
-
-    &.btn-primary {
-      background-color: var(--color-primary);
-      color: #fff;
-      border: none;
-
-        &:hover {
-            background-color: var(--color-primary-dark);
-        }
-    }
-
-    &.btn-secondary {
-      background-color: #fff;
-      color: var(--color-primary);
-      border: 2px solid var(--color-primary);
-
-        &:hover {
-            background-color: #f0efef;
-        }
-    }
-  }
-
-  .forgot-password-link {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    color: var(--color-primary);
-    text-decoration: none;
-    font-size: 14px;
-  }
-
-  .forgot-password-link:hover {
-    text-decoration: underline;
-  }
-
-  @media (min-width: 768px) {
-    .login-container {
-      padding: 40px;
-    }
-  }
-}
-</style>
