@@ -58,8 +58,9 @@ onMounted(() => {
   footer {
     background: var(--color-primary);
     color: #fff;
-    text-align: center;
-    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 7vh;
   }
