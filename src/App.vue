@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth';
 
 const authStore = useAuthStore()
+const route = useRoute();
 
 onMounted(() => {
   authStore.checkAuth
@@ -11,69 +12,27 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
-    <nav>
+  <div class="min-h-screen flex flex-col bg-[#f8fafc]">
+    <header v-if="route.name !== 'login'">
+      <nav class="container mx-auto flex justify-between items-center py-4">
         <RouterLink to="/">
-          <img alt="CompanySaver logo" class="logo poppins-bold" src="@/assets/img/logo.png"/>
+          <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png"/>
         </RouterLink>
-        <RouterLink v-if="!authStore.isAuthenticated" to="/login">Connexion</RouterLink>
-        <RouterLink v-if="authStore.isAuthenticated" to="/" @click="authStore.logout">Déconnexion</RouterLink>
-    </nav>
-  </header>
+        <RouterLink v-if="!authStore.isAuthenticated" to="/login">
+          <Button label="Connexion" severity="secondary" />
+        </RouterLink>
+        <RouterLink v-else to="/" @click="authStore.logout">
+          <Button label="Déconnexion" severity="secondary" />
+        </RouterLink>
+      </nav>
+    </header>
 
-  <RouterView class="routerview" />
+    <main class="flex-grow flex">
+      <RouterView class="w-full" />
+    </main>
 
-  <footer id="contact">
-      <p>&copy; 2024 CompanySaver. Tous droits réservés.</p>
-  </footer>
+    <footer v-if="route.name !== 'login'" id="contact" class="bg-white py-4">
+      <p class="text-center text-gray-600">&copy; 2024 CompanySaver. Tous droits réservés.</p>
+    </footer>
+  </div>
 </template>
-
-<style lang="scss" scoped>
-  header {
-    background-color: #f8f9fa;
-    padding: 10px 0;
-    text-align: center;
-    height: 10vh;
-    width: 100%;
-
-    nav {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      height: 100%;
-      width: 100%;
-  
-      .logo {
-        width: 120px;
-      }
-    }
-  }
-
-  .routerview {
-    min-height: 83vh;
-  }
-
-  footer {
-    background: var(--color-primary);
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 7vh;
-  }
-
-  /* Media queries pour écrans plus larges */
-  @media(min-width: 768px) {
-    nav {
-      padding: 0 40px;
-    }
-
-    .logo {
-      width: 150px;
-    }
-  }
-
-</style>
