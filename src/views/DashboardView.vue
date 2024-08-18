@@ -1,5 +1,10 @@
+<script setup lang="ts">
+import Layout from '@/components/Layout.vue';
+import Stats from '@/components/Stats.vue';
+</script>
+
 <template>
-    <div>
-        dashboard
-    </div>
+  <Layout>
+    <Stats />
+  </Layout>
 </template>
