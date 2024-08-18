@@ -26,5 +26,12 @@ const selectedCompany = ref<Company[]>([]);
             <Column field="tvaNumber" header="Numéro TVA" sortable></Column>
             <Column field="status" header="Status" sortable></Column>
         </DataTable>
+        <div v-else>
+            <div v-for="n in 4" :key="n" class="p-4">
+                <Skeleton width="100%" height="2rem" class="mb-2"></Skeleton>
+                <Skeleton width="75%" height="2rem" class="mb-2"></Skeleton>
+                <Skeleton width="50%" height="2rem" class="mb-2"></Skeleton>
+            </div>
+        </div>
     </div>
 </template>

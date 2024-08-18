@@ -25,6 +25,7 @@ declare module 'vue' {
     Rating: typeof import('primevue/rating')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Skeleton: typeof import('primevue/skeleton')['default']
     Stats: typeof import('./src/components/Stats.vue')['default']
     Tag: typeof import('primevue/tag')['default']
     Toast: typeof import('primevue/toast')['default']
