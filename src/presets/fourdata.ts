@@ -20,10 +20,10 @@ export default definePreset(Aura, {
         colorScheme: {
             light: {
                 primary: {
-                    color: '{primary.800}',
+                    color: 'var(--blue-primary)',
                       contrastColor: '#ffffff',
-                      hoverColor: '{primary.900}',
-                      activeColor: '{primary.950}'
+                      hoverColor: '{blue.900}',
+                      activeColor: '{blue.950}'
                 }
             }
         }
