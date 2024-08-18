@@ -10,6 +10,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const processing = ref<boolean>(false)
+const errorMessage = ref<string | null>(null);
 
 const input = reactive<{
   email: LoginData,
@@ -41,22 +42,18 @@ async function login() {
   if (!canSubmit.value) {
     return false;
   }
-
   processing.value = true;
-
   let params: LoginParams = {
     username: input.email.value,
     password: input.password.value,
   };
-
   const res: any = await authStore.login(params);
-
+  processing.value = false;
   if (res == 'success') {
-    processing.value = false;
+    router.push({ name: 'dashboard' });
   } else {
-    console.log(res);
-    processing.value = false;
     input.password.value = '';
+    errorMessage.value = 'Identifiants incorrects. Veuillez réessayer.';
   }
 }
 
@@ -81,13 +78,15 @@ function goBack() {
       <form @submit.prevent="login">
         <div class="mb-4">
           <label for="email" class="block text-gray-700 mb-2">Email</label>
-          <InputText id="email" v-model="input.email.value" :placeholder="input.email.placeholder" class="w-full p-inputtext-sm" required />
+          <InputText id="email" type="email" v-model="input.email.value" :placeholder="input.email.placeholder" class="w-full p-inputtext-sm" required />
         </div>
 
         <div class="mb-8">
           <label for="password" class="block text-gray-700 mb-2">Mot de passe</label>
           <InputText id="password" type="password" v-model="input.password.value" :placeholder="input.password.placeholder" class="w-full p-inputtext-sm" required />
         </div>
+
+        <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
         <Button type="submit" label="Connexion" icon="pi pi-user" class="w-full mb-4" ></Button>
         

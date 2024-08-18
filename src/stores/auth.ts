@@ -6,7 +6,6 @@ import router from '@/router';
 
 import type { LoginParams } from '@/interfaces/login';
 
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         isAuthenticated: authCheck(),
@@ -16,8 +15,9 @@ export const useAuthStore = defineStore('auth', {
         async login(params: LoginParams) {
             try {
                 const response = await axiosClient.post('login', params);
-
+        
                 const { cookies } = useCookies();
+
                 cookies.set(
                     `auth${suffixDomain()}`, 
                     response.data.token,
@@ -27,12 +27,13 @@ export const useAuthStore = defineStore('auth', {
                 )
                 this.isAuthenticated = true;
 
-                router.push({ name: 'dashboard' });
+                const event = new CustomEvent('login-success');
+                window.dispatchEvent(event);
 
                 return 'success';
             } catch (e) {
                 displayError(e);
-                return e;
+                return 'error';
             }
         },
         logout() {
