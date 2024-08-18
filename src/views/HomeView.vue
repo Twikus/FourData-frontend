@@ -9,7 +9,7 @@ function goToLogin() {
 </script>
 
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col w-full">
     <div class="text-center pt-32 pb-16">
       <h1 class="text-4xl font-bold mb-4">Gérez facilement vos entreprises avec <span class="text-primary-color">CompanySaver</span></h1>
       <p class="text-lg mb-6">Ajoutez des entreprises à votre compte en un clic en renseignant simplement le SIREN ou le SIRET.</p>
