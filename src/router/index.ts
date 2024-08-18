@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import { useAuthStore } from '@/stores/auth'
+import CompaniesView from '@/views/CompaniesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,6 +39,19 @@ const router = createRouter({
       path: '/',
       name: 'dashboard',
       component: DashboardView,
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        if (authStore.isAuthenticated) {
+          next();
+        } else {
+          next({ name: 'login' });
+        }
+      }
+    },
+    {
+      path: '/companies',
+      name: 'companies',
+      component: CompaniesView,
       beforeEnter: (to, from, next) => {
         const authStore = useAuthStore();
         if (authStore.isAuthenticated) {
