@@ -2,6 +2,10 @@
 import { ref } from 'vue';
 import MenuNav from '@/components/MenuNav.vue';
 
+const props = defineProps<{
+  title?: string
+}>();
+
 const isMobileMenuOpen = ref(false);
 
 function toggleMobileMenu() {
@@ -21,9 +25,12 @@ function toggleMobileMenu() {
       <div class="w-full lg:w-9/12">
         <Card class="h-full overflow-y-auto max-h-[calc(100vh-10rem)]">
           <template #content>
-            <Button @click="toggleMobileMenu" class="!text-black lg:!hidden" text>
-              <i class="pi pi-bars text-2xl"></i>
-            </Button>
+            <div class="flex flex-row">
+              <Button @click="toggleMobileMenu" class="!text-black lg:!hidden" text>
+                <i class="pi pi-bars text-2xl"></i>
+              </Button>
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 m-6 sm:truncate sm:text-3xl sm:tracking-tight">{{ props.title }}</h2>
+            </div>
             <slot />
           </template>
         </Card>
