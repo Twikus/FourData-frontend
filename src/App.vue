@@ -19,7 +19,7 @@ window.addEventListener('login-success', () => {
 });
 
 onMounted(() => {
-  authStore.checkAuth
+  authStore.checkAuth();
 })
 </script>
 
@@ -41,7 +41,7 @@ onMounted(() => {
 
     <Toast position="bottom-right" group="br" />
     <main class="flex-grow flex">
-      <RouterView class="w-full" />
+      <RouterView />
     </main>
 
     <footer v-if="route.name !== 'login'" id="contact" class="bg-white py-4">
