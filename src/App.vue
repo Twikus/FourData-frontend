@@ -2,9 +2,21 @@
 import { onMounted } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth';
+import { useToast } from "primevue/usetoast";
 
 const authStore = useAuthStore()
 const route = useRoute();
+
+const toast = useToast();
+
+window.addEventListener('login-success', () => {
+  toast.add({
+    severity: 'success',
+    summary: 'Connexion réussie',
+    life: 3000,
+    group: 'br'
+  });
+});
 
 onMounted(() => {
   authStore.checkAuth
@@ -27,6 +39,7 @@ onMounted(() => {
       </nav>
     </header>
 
+    <Toast position="bottom-right" group="br" />
     <main class="flex-grow flex">
       <RouterView class="w-full" />
     </main>

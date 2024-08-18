@@ -8,6 +8,7 @@ import router from './router'
 
 import PrimeVue from 'primevue/config';
 import Fourdata from '@/presets/fourdata';
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App)
 
@@ -21,6 +22,8 @@ app.use(PrimeVue, {
         }
     }
 });
+
+app.use(ToastService);
 
 app.use(createPinia())
 app.use(router)
