@@ -29,3 +29,8 @@ export function displayError(e: any) {
     console.log('Error: ', e);
   }
 }
+
+export function getToken() {
+  const { cookies } = useCookies();
+  return cookies.get(`auth${suffixDomain()}`);
+}
