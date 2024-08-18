@@ -12,8 +12,14 @@ declare module 'vue' {
     Checkbox: typeof import('primevue/checkbox')['default']
     DatePicker: typeof import('primevue/datepicker')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Layout: typeof import('./src/components/Layout.vue')['default']
+    Menu: typeof import('primevue/menu')['default']
+    MenuNav: typeof import('./src/components/MenuNav.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Toast: typeof import('primevue/toast')['default']
+  }
+  export interface ComponentCustomProperties {
+    Ripple: typeof import('primevue/ripple')['default']
   }
 }
