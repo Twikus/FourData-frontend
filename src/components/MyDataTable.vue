@@ -23,12 +23,12 @@ const deleteCompanyDialog = ref(false);
 const deleteCompaniesDialog = ref(false);
 
 const filters = ref({
-    global: {value: null, matchMode: FilterMatchMode.CONTAINS},
-    status: {value: null, matchMode: FilterMatchMode.EQUALS}
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 const statuses = [
-    { name: 'Ouverte'},
-    { name: 'Fermée'},
+    { name: 'Ouverte' },
+    { name: 'Fermée' },
 ];
 const company = ref<Company>({
     id: 0,
@@ -66,12 +66,31 @@ function hideDialog() {
 };
 
 function confirmDeleteSelected() {
-    if (selectedCompany && selectedCompany.value.length > 1) {
+    if (selectedCompany.value.length > 1) {
         deleteCompaniesDialog.value = true;
-    } else if (selectedCompany && selectedCompany.value.length === 1) {
+    } else if (selectedCompany.value.length === 1) {
         company.value = selectedCompany.value[0];
         deleteCompanyDialog.value = true;
     }
+};
+
+function deleteCompanies() {
+    selectedCompany.value.forEach(company => {
+        deleteCompany(company.id);
+    });
+    selectedCompany.value = [];
+    deleteCompaniesDialog.value = false;
+};
+
+async function deleteCompany(id: number) {
+    try {
+        await companyStore.deleteCompany(id);
+    } catch (error) {
+        displayError(error);
+    }
+
+    selectedCompany.value = selectedCompany.value.filter(c => c.id !== id);
+    deleteCompanyDialog.value = false;
 };
 
 async function saveCompany() {
@@ -84,7 +103,7 @@ async function saveCompany() {
         } else {
             companyData.value = { siret: identifierValue.value };
         }
-        
+
         try {
             await companyStore.createCompany(companyData.value);
         } catch (error) {
@@ -94,36 +113,12 @@ async function saveCompany() {
         hideDialog();
     }
 }
-
-async function deleteCompany(id: number) {
-    try {
-        await companyStore.deleteCompany(id);
-
-        deleteCompanyDialog.value = false;
-    } catch (error) {
-        displayError(error);
-    }
-}
-
-async function deleteCompanies() {
-    for (const company of selectedCompany.value) {
-        await deleteCompany(company.id);
-    }
-    deleteCompaniesDialog.value = false;
-}
 </script>
 
 <template>
     <div>
-        <DataTable
-            v-if="props.companies && props.companies.length > 0"
-            v-model:selection="selectedCompany"
-            :value="props.companies"
-            dataKey="id"
-            :filters="filters"
-            scrollable
-            scrollHeight="500px"
-        >
+        <DataTable v-if="props.companies && props.companies.length > 0" v-model:selection="selectedCompany"
+            :value="props.companies" stripedRows dataKey="id" :filters="filters" scrollable scrollHeight="500px">
             <template #header>
                 <div class="flex flex-wrap gap-2 items-center justify-between">
                     <div class="flex flex-row gap-4">
@@ -133,47 +128,32 @@ async function deleteCompanies() {
                             </InputIcon>
                             <InputText v-model="filters['global'].value" placeholder="Rechercher..." />
                         </IconField>
-                        <Select
-                            :modelValue="filters['status'].value"
-                            @update:modelValue="updateStatusFilter"
-                            :options="statuses"
-                            showClear
-                            optionLabel="name"
-                            placeholder="Filtrer par..."
-                            class="w-full md:w-56"
-                          >
-                          <template #value="slotProps">
-                              <div v-if="slotProps.value" class="flex items-center">
-                                <Tag :value="slotProps.value" :severity="getSeverity(slotProps.value)" />
-                              </div>
-                              <span v-else>
-                                {{ slotProps.placeholder }}
-                              </span>
+                        <Select :modelValue="filters['status'].value" @update:modelValue="updateStatusFilter"
+                            :options="statuses" showClear optionLabel="name" placeholder="Filtrer par..."
+                            class="w-full md:w-56">
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex items-center">
+                                    <Tag :value="slotProps.value" :severity="getSeverity(slotProps.value)" />
+                                </div>
+                                <span v-else>
+                                    {{ slotProps.placeholder }}
+                                </span>
                             </template>
                             <template #option="slotProps">
-                              <div class="flex items-center">
-                                <Tag :value="slotProps.option.name" :severity="getSeverity(slotProps.option.name)" />
-                              </div>
+                                <div class="flex items-center">
+                                    <Tag :value="slotProps.option.name"
+                                        :severity="getSeverity(slotProps.option.name)" />
+                                </div>
                             </template>
-                          </Select>
+                        </Select>
                     </div>
                     <div>
-                        <Button 
-                            label="Nouveau" 
-                            v-tooltip.top="{ value: 'Ajouter entreprise'}" 
-                            icon="pi pi-plus"
-                            severity="contrast"
-                            class="mr-2"
-                            @click="openNew"
-                        />
-                        <Button
-                            label="Supprimer"
-                            v-tooltip.top="!selectedCompany || !selectedCompany.length ? null : { value: 'Supprimer entreprise(s)'}"
-                            icon="pi pi-trash"
-                            severity="danger"
-                            @click="confirmDeleteSelected"
-                            :disabled="!selectedCompany || !selectedCompany.length"
-                        />
+                        <Button label="Nouveau" v-tooltip.top="{ value: 'Ajouter entreprise' }" icon="pi pi-plus"
+                            severity="contrast" class="mr-2" @click="openNew" />
+                        <Button label="Supprimer"
+                            v-tooltip.top="!selectedCompany || !selectedCompany.length ? null : { value: 'Supprimer entreprise(s)' }"
+                            icon="pi pi-trash" severity="danger" @click="confirmDeleteSelected"
+                            :disabled="!selectedCompany || !selectedCompany.length" />
                     </div>
                 </div>
             </template>
@@ -218,29 +198,20 @@ async function deleteCompanies() {
                 <Skeleton width="50%" height="2rem" class="mb-2"></Skeleton>
             </div>
         </div>
-        <Dialog v-model:visible="companyDialog" :style="{ width: '450px' }" header="Ajouter une entreprise" :modal="true">
+        <Dialog v-model:visible="companyDialog" :style="{ width: '450px' }" header="Ajouter une entreprise"
+            :modal="true">
             <div class="flex flex-col gap-6">
                 <div class="form-group flex flex-col">
                     <label for="identifierType">Type d'identifiant</label>
-                    <Select 
-                        id="identifierType"
-                        v-model="selectedIdentifierType"
-                        :options="[{ label: 'SIREN', value: 'siren' },{ label: 'SIRET', value: 'siret' }]"
-                        optionLabel="label"
-                        optionValue="value"
-                        placeholder="Sélectionnez un type"
-                    />
+                    <Select id="identifierType" v-model="selectedIdentifierType"
+                        :options="[{ label: 'SIREN', value: 'siren' }, { label: 'SIRET', value: 'siret' }]"
+                        optionLabel="label" optionValue="value" placeholder="Sélectionnez un type" />
                 </div>
                 <div class="form-group">
                     <label for="identifierValue">Valeur</label>
-                    <InputNumber
-                        id="identifierValue"
-                        v-model="identifierValue"
-                        required
-                        :invalid="submitted && !identifierValue"
-                        fluid
-                        :placeholder="selectedIdentifierType === 'siren' ? 'ex: 123456789' : 'ex: 12345678900012'"
-                    />
+                    <InputNumber id="identifierValue" v-model="identifierValue" required
+                        :invalid="submitted && !identifierValue" fluid
+                        :placeholder="selectedIdentifierType === 'siren' ? 'ex: 123456789' : 'ex: 12345678900012'" />
                 </div>
             </div>
 
