@@ -16,14 +16,14 @@ function toggleMobileMenu() {
 <template>
     <div class="flex flex-row gap-4 flex-grow p-6">
       <div class="w-3/12 hidden lg:block">
-        <Card class="h-full overflow-y-auto max-h-[calc(100vh-10rem)]">
+        <Card class="h-full overflow-y-auto">
           <template #content>
             <MenuNav />
           </template>
         </Card>
       </div>
       <div class="w-full lg:w-9/12">
-        <Card class="h-full overflow-y-auto max-h-[calc(100vh-10rem)]">
+        <Card class="h-full">
           <template #content>
             <div class="flex flex-row">
               <Button @click="toggleMobileMenu" class="!text-black lg:!hidden" text>
