@@ -18,6 +18,15 @@ window.addEventListener('login-success', () => {
   });
 });
 
+window.addEventListener('copy-success', () => {
+  toast.add({
+    severity: 'success',
+    summary: 'Copie réussie',
+    life: 3000,
+    group: 'br'
+  });
+});
+
 onMounted(() => {
   authStore.checkAuth();
 })
