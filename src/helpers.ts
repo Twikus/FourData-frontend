@@ -43,6 +43,17 @@ export function getStatus(status: boolean) {
   }
 }
 
+export function getSeverity(status: string) {
+  switch (status) {
+  case 'Ouverte':
+      return 'success';
+  case 'Fermée':
+      return 'danger';
+  default:
+      return 'info';
+  }
+}
+
 export function copyItem(item: any) {
   navigator.clipboard.writeText(item);
 
