@@ -25,6 +25,7 @@ declare module 'vue' {
     Rating: typeof import('primevue/rating')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('primevue/select')['default']
     Skeleton: typeof import('primevue/skeleton')['default']
     Stats: typeof import('./src/components/Stats.vue')['default']
     Tag: typeof import('primevue/tag')['default']
@@ -32,5 +33,6 @@ declare module 'vue' {
   }
   export interface ComponentCustomProperties {
     Ripple: typeof import('primevue/ripple')['default']
+    Tooltip: typeof import('primevue/tooltip')['default']
   }
 }
