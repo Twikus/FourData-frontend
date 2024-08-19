@@ -34,3 +34,18 @@ export function getToken() {
   const { cookies } = useCookies();
   return cookies.get(`auth${suffixDomain()}`);
 }
+
+export function getStatus(status: boolean) {
+  if (typeof status === 'boolean') {
+    return status ? 'Ouverte' : 'Fermée';
+  } else {
+    return status;
+  }
+}
+
+export function copyItem(item: any) {
+  navigator.clipboard.writeText(item);
+
+  const event = new CustomEvent('copy-success');
+  window.dispatchEvent(event);
+}

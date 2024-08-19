@@ -5,5 +5,5 @@ export interface Company {
     siren: number,
     siret: number,
     tvaNumber: string,
-    status: boolean,
+    status: boolean | string,
 }

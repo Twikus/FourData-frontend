@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { getToken, displayError } from '@/helpers';
+import { getToken, displayError, getStatus } from '@/helpers';
 import axiosClient from '@/plugins/axios';
 
 import type { Company } from '@/interfaces/company';
@@ -21,6 +21,13 @@ export const useCompanyStore = defineStore('company', {
                 });
 
                 this.companies = response.data;
+
+                this.companies = this.companies.map((company) => {
+                    return {
+                        ...company,
+                        status: typeof company.status === 'boolean' ? getStatus(company.status) : company.status,
+                    };
+                });
             
                 return response.data;
             } catch (error) {
