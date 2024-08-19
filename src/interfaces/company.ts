@@ -1,3 +1,11 @@
+export interface Siren {
+    siren: number
+}
+
+export interface Siret {
+    siret: number
+}
+
 export interface Company {
     id: number,
     name: string,

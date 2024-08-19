@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { getToken, displayError, getStatus } from '@/helpers';
 import axiosClient from '@/plugins/axios';
 
-import type { Company } from '@/interfaces/company';
+import type { Company, Siren, Siret } from '@/interfaces/company';
 
 export const useCompanyStore = defineStore('company', {
     state: () => ({
@@ -30,6 +30,23 @@ export const useCompanyStore = defineStore('company', {
                 });
             
                 return response.data;
+            } catch (error) {
+                displayError(error);
+            }
+        },
+        async createCompany(params: Siren | Siret) {
+            try {
+                const token = getToken();
+
+                const response = await axiosClient.post('companies', params, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                response.data.status = getStatus(response.data.status);
+
+                this.companies.unshift(response.data);
             } catch (error) {
                 displayError(error);
             }

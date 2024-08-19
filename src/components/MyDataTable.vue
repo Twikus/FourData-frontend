@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { defineProps, ref } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
+import { copyItem, getSeverity, displayError } from '@/helpers';
 
-import type { Company } from '@/interfaces/company';
-import { copyItem } from '@/helpers';
+import { useCompanyStore } from '@/stores/company';
+
+import type { Company, Siren, Siret } from '@/interfaces/company';
 
 const props = defineProps<{
     companies?: Company[],
     filters?: any
 }>();
 
+const companyStore = useCompanyStore();
+
 const selectedCompany = ref<Company[]>([]);
+const selectedIdentifierType = ref('siren');
+const identifierValue = ref<number | null>(null);
 const submitted = ref(false);
+const companyDialog = ref(false);
+
 const filters = ref({
     global: {value: null, matchMode: FilterMatchMode.CONTAINS},
     status: {value: null, matchMode: FilterMatchMode.EQUALS}
@@ -29,7 +37,6 @@ const company = ref<Company>({
     tvaNumber: '',
     status: false,
 });
-const companyDialog = ref(false);
 
 const openNew = () => {
     company.value = {
@@ -42,23 +49,39 @@ const openNew = () => {
         status: false,
     };
 
+    selectedIdentifierType.value = 'siren';
+    identifierValue.value = null;
     submitted.value = false;
     companyDialog.value = true;
 };
 
-function confirmDeleteSelected() {
-    console.log('confirmDeleteSelected');
+function hideDialog() {
+    companyDialog.value = false;
 }
 
-function getSeverity(status: string) {
-    switch (status) {
-    case 'Ouverte':
-        return 'success';
-    case 'Fermée':
-        return 'danger';
-    default:
-        return 'info';
+async function saveCompany() {
+    submitted.value = true;
+    if (identifierValue.value) {
+        const companyData = ref<Siren | Siret>();
+
+        if (selectedIdentifierType.value === 'siren') {
+            companyData.value = { siren: identifierValue.value };
+        } else {
+            companyData.value = { siret: identifierValue.value };
+        }
+        
+        try {
+            await companyStore.createCompany(companyData.value);
+        } catch (error) {
+            displayError(error);
+        }
+
+        hideDialog();
     }
+}
+
+function confirmDeleteSelected() {
+    console.log('confirmDeleteSelected');
 }
 
 function updateStatusFilter(value: any) {
@@ -133,9 +156,7 @@ function updateStatusFilter(value: any) {
             <template #empty>Aucune entreprise pour le moment.</template>
             <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
             <Column field="name" header="Nom" sortable></Column>
-            <Column field="address" header="Adresse">
-                
-            </Column>
+            <Column field="address" header="Adresse"></Column>
             <Column field="siren" header="Siren">
                 <template #body="{ data }">
                     <div class="flex flex-row justify-between items-center">
@@ -173,5 +194,36 @@ function updateStatusFilter(value: any) {
                 <Skeleton width="50%" height="2rem" class="mb-2"></Skeleton>
             </div>
         </div>
+        <Dialog v-model:visible="companyDialog" :style="{ width: '450px' }" header="Ajouter une entreprise" :modal="true">
+            <div class="flex flex-col gap-6">
+                <div class="form-group flex flex-col">
+                    <label for="identifierType">Type d'identifiant</label>
+                    <Select 
+                        id="identifierType"
+                        v-model="selectedIdentifierType"
+                        :options="[{ label: 'SIREN', value: 'siren' },{ label: 'SIRET', value: 'siret' }]"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Sélectionnez un type"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="identifierValue">Valeur</label>
+                    <InputNumber
+                        id="identifierValue"
+                        v-model="identifierValue"
+                        required
+                        :invalid="submitted && !identifierValue"
+                        fluid
+                        :placeholder="selectedIdentifierType === 'siren' ? 'ex: 123456789' : 'ex: 12345678900012'"
+                    />
+                </div>
+            </div>
+
+            <template #footer>
+                <Button label="Annuler" icon="pi pi-times" text @click="hideDialog" />
+                <Button label="Créer" icon="pi pi-check" @click="saveCompany" />
+            </template>
+        </Dialog>
     </div>
 </template>
