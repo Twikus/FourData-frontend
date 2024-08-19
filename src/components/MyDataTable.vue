@@ -19,6 +19,8 @@ const selectedIdentifierType = ref('siren');
 const identifierValue = ref<number | null>(null);
 const submitted = ref(false);
 const companyDialog = ref(false);
+const deleteCompanyDialog = ref(false);
+const deleteCompaniesDialog = ref(false);
 
 const filters = ref({
     global: {value: null, matchMode: FilterMatchMode.CONTAINS},
@@ -38,7 +40,7 @@ const company = ref<Company>({
     status: false,
 });
 
-const openNew = () => {
+function openNew() {
     company.value = {
         id: 0,
         name: '',
@@ -55,9 +57,22 @@ const openNew = () => {
     companyDialog.value = true;
 };
 
+function updateStatusFilter(value: any) {
+    filters.value.status.value = value ? value.name : null;
+}
+
 function hideDialog() {
     companyDialog.value = false;
-}
+};
+
+function confirmDeleteSelected() {
+    if (selectedCompany && selectedCompany.value.length > 1) {
+        deleteCompaniesDialog.value = true;
+    } else if (selectedCompany && selectedCompany.value.length === 1) {
+        company.value = selectedCompany.value[0];
+        deleteCompanyDialog.value = true;
+    }
+};
 
 async function saveCompany() {
     submitted.value = true;
@@ -80,12 +95,21 @@ async function saveCompany() {
     }
 }
 
-function confirmDeleteSelected() {
-    console.log('confirmDeleteSelected');
+async function deleteCompany(id: number) {
+    try {
+        await companyStore.deleteCompany(id);
+
+        deleteCompanyDialog.value = false;
+    } catch (error) {
+        displayError(error);
+    }
 }
 
-function updateStatusFilter(value: any) {
-    filters.value.status.value = value ? value.name : null;
+async function deleteCompanies() {
+    for (const company of selectedCompany.value) {
+        await deleteCompany(company.id);
+    }
+    deleteCompaniesDialog.value = false;
 }
 </script>
 
@@ -223,6 +247,27 @@ function updateStatusFilter(value: any) {
             <template #footer>
                 <Button label="Annuler" icon="pi pi-times" text @click="hideDialog" />
                 <Button label="Créer" icon="pi pi-check" @click="saveCompany" />
+            </template>
+        </Dialog>
+        <Dialog v-model:visible="deleteCompanyDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span v-if="company">Êtes-vous sûr de vouloir supprimer <b>{{ company.name }}</b> ?</span>
+            </div>
+            <template #footer>
+                <Button label="Non" icon="pi pi-times" text @click="deleteCompanyDialog = false" />
+                <Button label="Oui" icon="pi pi-check" @click="deleteCompany(company.id)" />
+            </template>
+        </Dialog>
+
+        <Dialog v-model:visible="deleteCompaniesDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+            <div class="flex items-center gap-4">
+                <i class="pi pi-exclamation-triangle !text-3xl" />
+                <span>Êtes-vous sûr de vouloir supprimer les entreprises sélectionnées ?</span>
+            </div>
+            <template #footer>
+                <Button label="Non" icon="pi pi-times" text @click="deleteCompaniesDialog = false" />
+                <Button label="Oui" icon="pi pi-check" text @click="deleteCompanies" />
             </template>
         </Dialog>
     </div>

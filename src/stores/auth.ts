@@ -2,6 +2,7 @@ import axiosClient from "@/plugins/axios";
 import { defineStore } from "pinia";
 import { useCookies } from 'vue3-cookies';
 import { authCheck, displayError, suffixDomain } from '@/helpers';
+import { addEvent } from "@/events";
 import router from '@/router';
 
 import type { LoginParams } from '@/interfaces/login';
@@ -27,8 +28,7 @@ export const useAuthStore = defineStore('auth', {
                 )
                 this.isAuthenticated = true;
 
-                const event = new CustomEvent('login-success');
-                window.dispatchEvent(event);
+                addEvent('login-success');
 
                 return 'success';
             } catch (e) {

@@ -1,34 +1,15 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { useAuthStore } from './stores/auth';
-import { useToast } from "primevue/usetoast";
+import { useAuthStore } from '@/stores/auth';
+import { registerGlobalEvents } from '@/events';
 
 const authStore = useAuthStore()
 const route = useRoute();
 
-const toast = useToast();
-
-window.addEventListener('login-success', () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Connexion réussie',
-    life: 3000,
-    group: 'br'
-  });
-});
-
-window.addEventListener('copy-success', () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Copie réussie',
-    life: 3000,
-    group: 'br'
-  });
-});
-
 onMounted(() => {
   authStore.checkAuth();
+  registerGlobalEvents();
 })
 </script>
 

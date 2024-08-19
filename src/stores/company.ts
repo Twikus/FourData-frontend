@@ -3,6 +3,7 @@ import { getToken, displayError, getStatus } from '@/helpers';
 import axiosClient from '@/plugins/axios';
 
 import type { Company, Siren, Siret } from '@/interfaces/company';
+import { addEvent } from '@/events';
 
 export const useCompanyStore = defineStore('company', {
     state: () => ({
@@ -47,8 +48,27 @@ export const useCompanyStore = defineStore('company', {
                 response.data.status = getStatus(response.data.status);
 
                 this.companies.unshift(response.data);
+
+                addEvent('create-company-success');
             } catch (error) {
                 displayError(error);
+            }
+        },
+        async deleteCompany(id: number) {
+            try {
+                const token = getToken();
+
+                await axiosClient.delete(`companies/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    }
+                });
+
+                this.companies = this.companies.filter((company) => company.id !== id);
+
+                addEvent('remove-company-success');
+            } catch (error) {
+                displayError(error)
             }
         }
     },
