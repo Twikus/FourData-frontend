@@ -29,3 +29,34 @@ export function displayError(e: any) {
     console.log('Error: ', e);
   }
 }
+
+export function getToken() {
+  const { cookies } = useCookies();
+  return cookies.get(`auth${suffixDomain()}`);
+}
+
+export function getStatus(status: boolean) {
+  if (typeof status === 'boolean') {
+    return status ? 'Ouverte' : 'Fermée';
+  } else {
+    return status;
+  }
+}
+
+export function getSeverity(status: string) {
+  switch (status) {
+  case 'Ouverte':
+      return 'success';
+  case 'Fermée':
+      return 'danger';
+  default:
+      return 'info';
+  }
+}
+
+export function copyItem(item: any) {
+  navigator.clipboard.writeText(item);
+
+  const event = new CustomEvent('copy-success');
+  window.dispatchEvent(event);
+}

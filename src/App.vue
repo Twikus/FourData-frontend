@@ -1,34 +1,24 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { useAuthStore } from './stores/auth';
-import { useToast } from "primevue/usetoast";
+import { useAuthStore } from '@/stores/auth';
+import { registerGlobalEvents } from '@/events';
 
 const authStore = useAuthStore()
 const route = useRoute();
 
-const toast = useToast();
-
-window.addEventListener('login-success', () => {
-  toast.add({
-    severity: 'success',
-    summary: 'Connexion réussie',
-    life: 3000,
-    group: 'br'
-  });
-});
-
 onMounted(() => {
-  authStore.checkAuth
+  authStore.checkAuth();
+  registerGlobalEvents();
 })
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col bg-[#f8fafc]">
     <header v-if="route.name !== 'login'">
-      <nav class="container mx-auto flex justify-between items-center py-4">
+      <nav class="container mx-auto flex justify-between items-center py-4 px-6">
         <RouterLink to="/">
-          <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png"/>
+          <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png" />
         </RouterLink>
         <RouterLink v-if="!authStore.isAuthenticated" to="/login">
           <Button label="Connexion" severity="secondary" />
@@ -40,8 +30,8 @@ onMounted(() => {
     </header>
 
     <Toast position="bottom-right" group="br" />
-    <main class="flex-grow flex">
-      <RouterView class="w-full" />
+    <main class="flex-grow flex h-svh">
+      <RouterView />
     </main>
 
     <footer v-if="route.name !== 'login'" id="contact" class="bg-white py-4">
