@@ -28,7 +28,7 @@ const input = reactive<{
 
 const canSubmit = computed(() => {
   if (!processing.value
-    && input.email.value != '' 
+    && input.email.value != ''
     && validateEmail(input.email.value)
     && input.password.value != ''
   ) {
@@ -54,6 +54,10 @@ async function login() {
   } else {
     input.password.value = '';
     errorMessage.value = 'Identifiants incorrects. Veuillez réessayer.';
+
+    setTimeout(() => {
+      errorMessage.value = null;
+    }, 5000);
   }
 }
 
@@ -63,9 +67,9 @@ function goBack() {
 </script>
 
 <template>
-  <div class="flex flex-grow items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-      <h3 class="cursor-pointer mb-6 text-sm" @click="goBack">
+  <div class="bg-white flex flex-grow items-center justify-center relative">
+    <div class="py-8 px-12 w-full max-w-md">
+      <h3 class="cursor-pointer mb-6 text-sm static md:absolute md:top-8 md:left-8" @click="goBack">
         <i class="pi pi-arrow-left" style="font-size: 0.7rem"></i>
         <span> Revenir en arrière</span>
       </h3>
@@ -74,22 +78,24 @@ function goBack() {
         <span class="text-600 line-height-3">Pas encore de compte ?</span>
         <RouterLink to="/signup" class="font-medium no-underline ml-2 text-blue-500">Inscrivez vous !</RouterLink>
       </p>
-      
+
       <form @submit.prevent="login">
         <div class="mb-4">
           <label for="email" class="block text-gray-700 mb-2">Email</label>
-          <InputText id="email" type="email" v-model="input.email.value" :placeholder="input.email.placeholder" class="w-full p-inputtext-sm" required />
+          <InputText id="email" type="email" v-model="input.email.value" :placeholder="input.email.placeholder"
+            class="w-full p-inputtext-sm" required />
         </div>
 
         <div class="mb-8">
           <label for="password" class="block text-gray-700 mb-2">Mot de passe</label>
-          <InputText id="password" type="password" v-model="input.password.value" :placeholder="input.password.placeholder" class="w-full p-inputtext-sm" required />
+          <Password id="password" type="password" v-model="input.password.value" fluid :feedback="false" toggleMask
+            :placeholder="input.password.placeholder" class="w-full" required />
         </div>
 
         <p v-if="errorMessage" class="text-red-500 text-sm mb-4">{{ errorMessage }}</p>
 
-        <Button type="submit" label="Connexion" icon="pi pi-user" class="w-full mb-4" ></Button>
-        
+        <Button type="submit" label="Connexion" icon="pi pi-user" class="w-full mb-4"></Button>
+
         <!--<RouterLink to="/forgot-password" class="block text-center font-medium no-underline ml-2 text-blue-500">Mot de passe oublié ?</RouterLink>-->
       </form>
     </div>

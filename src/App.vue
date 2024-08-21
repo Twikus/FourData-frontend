@@ -16,9 +16,9 @@ onMounted(() => {
 <template>
   <div class="min-h-screen flex flex-col bg-[#f8fafc]">
     <header v-if="route.name !== 'login'">
-      <nav class="container mx-auto flex justify-between items-center py-4">
+      <nav class="container mx-auto flex justify-between items-center py-4 px-6">
         <RouterLink to="/">
-          <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png"/>
+          <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png" />
         </RouterLink>
         <RouterLink v-if="!authStore.isAuthenticated" to="/login">
           <Button label="Connexion" severity="secondary" />
@@ -30,7 +30,7 @@ onMounted(() => {
     </header>
 
     <Toast position="bottom-right" group="br" />
-    <main class="flex-grow flex">
+    <main class="flex-grow flex h-svh">
       <RouterView />
     </main>
 
