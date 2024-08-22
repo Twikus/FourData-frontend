@@ -5,6 +5,7 @@ import { authCheck, displayError, suffixDomain } from '@/helpers';
 import router from '@/router';
 
 import type { LoginParams } from '@/interfaces/login';
+import type { RegisterParams } from "@/interfaces/register";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -42,6 +43,30 @@ export const useAuthStore = defineStore('auth', {
             this.$reset();
 
             router.push({ name: 'home' });
+        },
+        async register(params: RegisterParams) {
+            try {
+                const response = await axiosClient.post('register', params);
+
+                const { cookies } = useCookies();
+
+                cookies.set(
+                    `auth${suffixDomain()}`, 
+                    response.data.token,
+                    60 * 60 * 4,
+                    undefined, 
+                    import.meta.env.VITE_DOMAIN
+                )
+                this.isAuthenticated = true;
+
+                const event = new CustomEvent('register-success');
+                window.dispatchEvent(event);
+
+                return 'success';
+            } catch (e) {
+                displayError(e);
+                return e.response.data;
+            }
         },
         checkAuth() {
             this.isAuthenticated = authCheck();
