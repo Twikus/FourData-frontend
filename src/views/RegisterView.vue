@@ -59,25 +59,26 @@ async function register() {
             <form @submit.prevent="register">
                 <div class="mb-4">
                     <label for="firstname" class="block text-gray-700 mb-2">Prénom</label>
-                    <InputText id="firstname" v-model="input.firstname" class="w-full" required />
+                    <InputText id="firstname" v-model="input.firstname" class="w-full" placeholder="John" required />
                 </div>
                 <div class="mb-4">
                     <label for="lastname" class="block text-gray-700 mb-2">Nom</label>
-                    <InputText id="lastname" v-model="input.lastname" class="w-full" required />
+                    <InputText id="lastname" v-model="input.lastname" class="w-full" placeholder="Doe" required />
                 </div>
                 <div class="mb-4">
                     <label for="email" class="block text-gray-700 mb-2">Email</label>
-                    <InputText id="email" type="email" v-model="input.email" class="w-full" required />
+                    <InputText id="email" type="email" v-model="input.email" class="w-full"
+                        placeholder="user@example.com" required />
                 </div>
                 <div class="mb-4">
                     <label for="password" class="block text-gray-700 mb-2">Mot de passe</label>
                     <Password id="password" type="password" fluid v-model="input.password" class="w-full" toggleMask
-                        required />
+                        placeholder="********" required />
                 </div>
                 <div class="mb-4">
                     <label for="confirmPassword" class="block text-gray-700 mb-2">Confirmation de mot de passe</label>
                     <Password id="confirmPassword" type="password" fluid v-model="confirmPassword" :feedback="false"
-                        toggleMask class="w-full" required />
+                        toggleMask class="w-full" placeholder="********" required />
                 </div>
                 <p v-if="errorMessage" class="text-red-500 text-sm mb-4 flex flex-col">
                     <span v-for="message in errorMessage">{{ message }}</span>
