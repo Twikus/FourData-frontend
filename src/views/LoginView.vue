@@ -76,7 +76,7 @@ function goBack() {
       <h1 class="text-2xl font-semibold mb-6 text-center">Connexion à CompanySaver</h1>
       <p class="text-center mb-6 text-gray-600">
         <span class="text-600 line-height-3">Pas encore de compte ?</span>
-        <RouterLink to="/signup" class="font-medium no-underline ml-2 text-blue-500">Inscrivez vous !</RouterLink>
+        <RouterLink to="/register" class="font-medium no-underline ml-2 text-blue-500">Inscrivez vous !</RouterLink>
       </p>
 
       <form @submit.prevent="login">
