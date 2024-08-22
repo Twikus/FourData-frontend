@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import { useAuthStore } from '@/stores/auth'
+import RegisterView from '@/views/RegisterView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,19 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+      beforeEnter: (to, from, next) => {
+        const authStore = useAuthStore();
+        if (authStore.isAuthenticated) {
+          next({ name: 'dashboard' });
+        } else {
+          next();
+        }
+      }
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: RegisterView,
       beforeEnter: (to, from, next) => {
         const authStore = useAuthStore();
         if (authStore.isAuthenticated) {
