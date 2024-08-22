@@ -15,7 +15,7 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen flex flex-col bg-[#f8fafc]">
-    <header v-if="route.name !== 'login'">
+    <header v-if="route.name !== 'login' && route.name !== 'register'">
       <nav class="container mx-auto flex justify-between items-center py-4 px-6">
         <RouterLink to="/">
           <img alt="CompanySaver logo" class="h-10 w-auto" src="@/assets/img/logo.png" />
